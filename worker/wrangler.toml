@@ -1,0 +1,13 @@
+name = "tracado-contato"
+main = "index.js"
+compatibility_date = "2026-09-01"
+
+[vars]
+# Quem pode postar no formulário. Ajuste quando houver domínio próprio.
+ORIGENS_PERMITIDAS = "https://tracado.pages.dev,http://localhost:3000"
+# Enquanto não houver domínio verificado no Resend, use o remetente de teste.
+REMETENTE = "Traçado <onboarding@resend.dev>"
+DESTINATARIO = "sgduarte7@gmail.com"
+
+# RESEND_API_KEY NÃO vai aqui — é secret:
+#   wrangler secret put RESEND_API_KEY
