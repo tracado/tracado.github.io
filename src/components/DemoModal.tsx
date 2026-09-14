@@ -307,7 +307,17 @@ export const DemoModal: React.FC<DemoModalProps> = ({
       // basta olhar o status: mostrar sucesso sem envio faria a pessoa ir
       // embora achando que fez contato.
       if (!r.ok || d.success === false) {
-        throw new Error(d.message || 'Não foi possível enviar agora.');
+        // O plano gratuito do Web3Forms para em 250 envios por mês e RECUSA os
+        // seguintes até o mês virar (confirmado com o suporte deles). Nesse
+        // caso a mensagem volta em inglês e falando de cota — o que não diz
+        // nada para quem só queria agendar uma conversa. Traduzimos para o que
+        // interessa a essa pessoa: o contato não foi perdido, existe outro
+        // caminho, e ele está logo abaixo.
+        const cru = String(d.message || '');
+        const cota = /limit|quota|exceed|upgrade|plan/i.test(cru);
+        throw new Error(cota
+          ? 'Nosso formulário atingiu o limite de envios deste mês.'
+          : (cru || 'Não foi possível enviar agora.'));
       }
       setSubmitted(true);
     } catch (err) {
@@ -419,9 +429,29 @@ export const DemoModal: React.FC<DemoModalProps> = ({
           /* Auditor Meeting Scheduler Form */
           <form onSubmit={handleSubmit} className="space-y-4">
             {erroEnvio && (
-              <div className="p-3 rounded-xl bg-red-500/10 border border-red-400/30 text-xs text-red-300">
-                {erroEnvio} Se persistir, escreva direto para{' '}
-                <a className="underline" href="mailto:sgduarte7@gmail.com">sgduarte7@gmail.com</a>.
+              <div className="p-3 rounded-xl bg-red-500/10 border border-red-400/30 text-xs text-red-300 space-y-1.5">
+                <p>{erroEnvio}</p>
+                <p className="text-red-200">
+                  Seu contato não se perdeu — escreva direto para{' '}
+                  <a
+                    className="underline font-semibold"
+                    href={`mailto:sgduarte7@gmail.com?subject=${encodeURIComponent(
+                      `Traçado — contato de ${formData.name || 'novo interessado'}`,
+                    )}&body=${encodeURIComponent(
+                      [
+                        `Nome: ${formData.name}`,
+                        `E-mail: ${formData.email}`,
+                        `Empresa: ${formData.company}`,
+                        `Telefone: ${formData.phone}`,
+                        `Interesse: ${formData.interest}`,
+                        formData.detalhe ? `Detalhe: ${formData.detalhe}` : '',
+                      ].filter(Boolean).join('\n'),
+                    )}`}
+                  >
+                    sgduarte7@gmail.com
+                  </a>{' '}
+                  — o e-mail já vai preenchido com o que você digitou.
+                </p>
               </div>
             )}
             <div className="flex items-center gap-3 pb-3 border-b border-white/5">
