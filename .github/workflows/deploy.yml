@@ -27,7 +27,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # Node 20 saiu de suporte; o runner já força as actions para o 24.
+          # Fixar 22 (LTS) mantém o build previsível em vez de acompanhar o
+          # que o runner resolver usar.
+          node-version: '22'
           cache: npm
 
       - run: npm ci
