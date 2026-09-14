@@ -1,4 +1,5 @@
 import React from 'react';
+import { Marca } from './Marca';
 import { Shield, Lock, Server, Heart, ArrowUp } from 'lucide-react';
 
 interface FooterProps {
@@ -21,11 +22,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenDemo, onOpenCommunityModal
           {/* Col 1 & 2: Brand & Philosophy */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 p-0.5 shadow-lg shadow-blue-500/20">
-                <div className="w-full h-full bg-[#05070A] rounded-[10px] flex items-center justify-center font-bold text-white text-base">
-                  <span className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">T</span>
-                </div>
-              </div>
+              <Marca tamanho={38} className="shrink-0" />
               <div>
                 <span className="text-lg font-extrabold text-white tracking-tight">Traçado</span>
                 <span className="text-[10px] uppercase font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 ml-2 font-mono">

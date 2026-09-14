@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Marca } from './Marca';
 import { Shield, Sparkles, UserCheck, Menu, X, ArrowRight, Layers, FileText } from 'lucide-react';
 
 interface NavbarProps {
@@ -39,11 +40,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDemo, onOpenCommunityModal
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand Logo */}
         <a href="#" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-700 rounded-lg flex items-center justify-center rotate-3 shadow-lg shadow-blue-500/20 group-hover:rotate-0 transition-transform">
-            <div className="w-4 h-4 border-2 border-white rounded-sm flex items-center justify-center text-[10px] font-extrabold text-white">
-              T
-            </div>
-          </div>
+          {/* A marca de verdade, no lugar do "T" provisório que estava aqui. */}
+          <Marca tamanho={44} className="shrink-0 transition-transform group-hover:scale-105" />
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <span className="text-xl font-extrabold tracking-tight text-white">TRAÇADO</span>

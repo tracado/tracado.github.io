@@ -1,11 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Traçado">
-  <!-- PROVISÓRIO: marca de lugar até a identidade visual definitiva existir.
-       O nome remete a traço e percurso, então o símbolo é um traçado que sobe
-       por pontos de controle — a mesma ideia do produto: pontos ligados. -->
-  <rect width="64" height="64" rx="14" fill="#0B0F14"/>
-  <path d="M12 46 L26 32 L38 40 L52 18"
-        fill="none" stroke="#2563EB" stroke-width="5"
-        stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="26" cy="32" r="4.5" fill="#0B0F14" stroke="#60A5FA" stroke-width="3"/>
-  <circle cx="38" cy="40" r="4.5" fill="#0B0F14" stroke="#60A5FA" stroke-width="3"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512"
+     role="img" aria-label="Traçado"><title>Traçado — ícone</title>
+    <rect width="64" height="64" rx="14" fill="#0B0F14"/>
+    <path d="M8.75 49.5 L18.94 38.51" fill="none" stroke="#2563EB" stroke-width="5.5"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M29.28 36.99 L31.52 38.31" fill="none" stroke="#2563EB" stroke-width="5.5"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40.99 36.11 L55.25 14.5" fill="none" stroke="#2563EB" stroke-width="5.5"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="23.5" cy="33.6" r="5.05" fill="none" stroke="#60A5FA" stroke-width="3.3"/>
+    <circle cx="37.3" cy="41.7" r="5.05" fill="none" stroke="#60A5FA" stroke-width="3.3"/>
 </svg>
