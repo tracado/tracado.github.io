@@ -24,7 +24,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenDemo, onOpenCommunityModal
             <div className="flex items-center gap-3">
               <Marca tamanho={38} className="shrink-0" />
               <div>
-                <span className="text-lg font-extrabold text-white tracking-tight">Traçado</span>
+                <span className="marca-nome text-xl text-white">Traçado</span>
                 <span className="text-[10px] uppercase font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 ml-2 font-mono">
                   GRC Hub
                 </span>

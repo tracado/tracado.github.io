@@ -44,7 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDemo, onOpenCommunityModal
           <Marca tamanho={44} className="shrink-0 transition-transform group-hover:scale-105" />
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <span className="text-xl font-extrabold tracking-tight text-white">TRAÇADO</span>
+              <span className="marca-nome text-2xl text-white">Traçado</span>
               <span className="text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
                 GRC Suite
               </span>

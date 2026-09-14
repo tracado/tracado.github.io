@@ -37,3 +37,18 @@ html, body {
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
+
+/* Fonte da assinatura da marca — SÓ do wordmark "Traçado", em nenhum outro
+   lugar. A Poppins é geométrica, construída sobre círculos: o "a", o "ç" e o
+   "o" ecoam os dois anéis do símbolo, e as duas peças passam a ter o mesmo
+   vocabulário. O texto corrido da página continua em Plus Jakarta Sans.
+
+   Peso 500, não 800: o traço do símbolo tem 5,5 numa grade de 64 (~8,6% da
+   altura). Um wordmark em 800 fica proporcionalmente muito mais pesado, e o
+   conjunto deixa de parecer uma marca só — vira um desenho fino encostado
+   num bloco preto. */
+.marca-nome {
+  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
