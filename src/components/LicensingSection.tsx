@@ -137,6 +137,23 @@ export const LicensingSection: React.FC<LicensingSectionProps> = ({ onSelectPlan
           })}
         </div>
 
+        {/* Como se paga. A página falava de preço e não dizia como comprar — e o
+            único sinal sobre pagamento era um "Sem cartão de crédito" que se lia
+            como recusa de cartão. O modelo é licença por VERSÃO, ou seja,
+            transação única: não existe assinatura recorrente, e por isso nenhum
+            dado de cartão precisa ser guardado. Numa empresa que vende
+            conformidade isso não é limitação — é superfície de risco que
+            simplesmente não existe. */}
+        <div className="mt-10 p-4 rounded-2xl bg-blue-500/5 border border-blue-500/15 text-center text-xs text-slate-400 max-w-2xl mx-auto backdrop-blur-md">
+          <span className="block text-slate-300 font-semibold mb-1">Como funciona o pagamento</span>
+          <span>
+            Boleto, Pix ou cartão, com possibilidade de parcelamento. A negociação é direta
+            conosco — <strong className="text-slate-300">a cobrança não acontece na plataforma</strong>.
+            Como o licenciamento é por versão, e não assinatura, a transação é única:{' '}
+            <strong className="text-slate-300">nenhum dado de cartão passa pelo Traçado nem fica armazenado</strong>.
+          </span>
+        </div>
+
         {/* Guarantee Banner */}
         <div className="mt-12 p-4 rounded-2xl bg-black/40 border border-white/5 text-center text-xs text-slate-400 max-w-2xl mx-auto flex items-center justify-center gap-2 backdrop-blur-md">
           <Lock className="w-4 h-4 text-emerald-400 shrink-0" />

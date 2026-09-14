@@ -109,7 +109,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenDemo, onOpenCommunityModal }) 
           {/* Market proof badges */}
           <div className="pt-3 text-[11px] text-slate-400 flex flex-wrap items-center justify-center gap-5">
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Sem cartão de crédito
+              {/* Era "Sem cartão de crédito" — vocabulário de SaaS, onde significa
+                  "experimente sem cadastrar cartão". Aqui era lido como "não
+                  aceitamos cartão", o oposto do que se quer dizer, e freava a
+                  venda. O que é verdade e vende melhor: baixar e usar não passa
+                  por cadastro nem cobrança de espécie alguma. */}
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Sem cadastro e sem cobrança
             </span>
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Container Docker / Appliance
