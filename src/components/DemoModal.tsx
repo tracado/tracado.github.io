@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   X,
   UserCheck,
@@ -131,6 +131,21 @@ const formatarTelefone = (v: string): string => {
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
 };
 
+/** Sitekey COMPARTILHADA do hCaptcha, publicada pelo próprio Web3Forms para
+ *  integração sem configuração: não exige conta no hCaptcha nem chave nossa.
+ *  Documentada em docs.web3forms.com — é pública por desenho, como a de baixo. */
+const HCAPTCHA_SITEKEY = '50b2fe65-b00b-4b9e-ad62-3ba471098be2';
+
+declare global {
+  interface Window {
+    hcaptcha?: {
+      render: (el: HTMLElement, opts: Record<string, unknown>) => string;
+      reset: (id?: string) => void;
+      remove: (id: string) => void;
+    };
+  }
+}
+
 /** Chave PÚBLICA do Web3Forms — por desenho ela fica no código do navegador.
  *  Identifica para qual caixa de entrada o contato vai; não dá acesso a nada. */
 const WEB3FORMS_KEY = '6b6fa9cc-3cde-4ffc-be29-c5728ac1e12c';
@@ -158,6 +173,11 @@ export const DemoModal: React.FC<DemoModalProps> = ({
   // Honeypot: fica fora da tela, ninguém o vê para marcar. Se vier marcado,
   // quem preencheu foi um robô lendo o HTML.
   const [botcheck, setBotcheck] = useState(false);
+  // Token devolvido pelo hCaptcha quando a pessoa passa no desafio. Sem ele o
+  // Web3Forms recusa o envio, então ele também trava o botão aqui.
+  const [captcha, setCaptcha] = useState<string | null>(null);
+  const captchaBox = useRef<HTMLDivElement>(null);
+  const captchaId = useRef<string | null>(null);
   const [copiedDocker, setCopiedDocker] = useState(false);
   const [formData, setFormData] = useState(() => buildInitialFormData(initialPlan));
   // Um campo vazio que a pessoa ainda nem tocou não é erro dela — é o
@@ -173,9 +193,45 @@ export const DemoModal: React.FC<DemoModalProps> = ({
       setFormData(buildInitialFormData(initialPlan));
       setTocado({});
       setErroEnvio(null);
+      setCaptcha(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, initialPlan]);
+
+  // O script do hCaptcha carrega async, então pode não estar pronto quando o
+  // modal abre. Em vez de assumir, espera-o aparecer — e desiste depois de 10s
+  // para não ficar um intervalo girando para sempre numa rede que o bloqueou.
+  useEffect(() => {
+    if (!isOpen || submitted) return;
+    let vivo = true;
+    let tentativas = 0;
+
+    const montar = () => {
+      if (!vivo) return;
+      const h = window.hcaptcha;
+      if (!h || !captchaBox.current) {
+        if (++tentativas > 100) return;      // ~10 s
+        window.setTimeout(montar, 100);
+        return;
+      }
+      if (captchaId.current !== null) {
+        h.reset(captchaId.current);
+        setCaptcha(null);
+        return;
+      }
+      captchaId.current = h.render(captchaBox.current, {
+        sitekey: HCAPTCHA_SITEKEY,
+        theme: 'dark',
+        size: 'normal',
+        callback: (token: string) => setCaptcha(token),
+        'expired-callback': () => setCaptcha(null),
+        'error-callback': () => setCaptcha(null),
+      });
+    };
+
+    montar();
+    return () => { vivo = false; };
+  }, [isOpen, submitted]);
 
   if (!isOpen) return null;
 
@@ -193,15 +249,18 @@ export const DemoModal: React.FC<DemoModalProps> = ({
       ? 'Conte em uma linha do que se trata.'
       : null,
   };
-  const formValido = !Object.values(erros).some(Boolean);
+  // O captcha entra na mesma trava dos campos: sem ele o Web3Forms recusaria o
+  // envio de qualquer jeito, e a pessoa veria um erro depois de preencher tudo.
+  const formValido = !Object.values(erros).some(Boolean) && Boolean(captcha);
 
   const FALTANDO: Record<CampoForm, string> = {
     name: 'nome', email: 'e-mail', company: 'empresa',
     phone: 'telefone', detalhe: 'assunto',
   };
-  const pendencias = (Object.keys(erros) as CampoForm[])
-    .filter((k) => erros[k])
-    .map((k) => FALTANDO[k]);
+  const pendencias = [
+    ...(Object.keys(erros) as CampoForm[]).filter((k) => erros[k]).map((k) => FALTANDO[k]),
+    ...(captcha ? [] : ['a verificação anti-robô']),
+  ];
 
   const marcarTocado = (campo: CampoForm) =>
     setTocado((t) => ({ ...t, [campo]: true }));
@@ -240,6 +299,7 @@ export const DemoModal: React.FC<DemoModalProps> = ({
           // Campo anti-robô do próprio Web3Forms: invisível na tela, então só
           // um preenchedor automático o preenche.
           botcheck: botcheck ? 'on' : '',
+          'h-captcha-response': captcha,
         }),
       });
       const d = await r.json().catch(() => ({}));
@@ -254,6 +314,10 @@ export const DemoModal: React.FC<DemoModalProps> = ({
       // Nunca mostrar sucesso sem envio confirmado: a pessoa iria embora
       // achando que fez contato, e o contato nunca chegaria.
       setErroEnvio(err instanceof Error ? err.message : 'Falha no envio.');
+      // Um token de captcha só vale uma vez. Depois de um envio falho é preciso
+      // refazer o desafio, senão a segunda tentativa é recusada sem explicação.
+      if (captchaId.current !== null) window.hcaptcha?.reset(captchaId.current);
+      setCaptcha(null);
     } finally {
       setEnviando(false);
     }
@@ -500,6 +564,10 @@ export const DemoModal: React.FC<DemoModalProps> = ({
                 aria-hidden="true" style={{ position: 'absolute', left: '-9999px' }}
                 onChange={(ev) => setBotcheck(ev.target.checked)} checked={botcheck}
               />
+
+              {/* O desafio fica junto do botão, no fim do fluxo: pedi-lo antes de a
+                  pessoa preencher os campos é fricção no lugar errado. */}
+              <div ref={captchaBox} className="flex justify-center min-h-[78px]" />
 
               {/* Aviso de privacidade. Afirma só o que é verdade e o que se pode
                   cumprir: um contato que passa por um provedor de formulários e
